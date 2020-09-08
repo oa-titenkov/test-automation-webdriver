@@ -18,22 +18,23 @@ public class GoogleCloudCalculatorTest {
     driver = new ChromeDriver();
   }
 
-  @Test(description = "Hurt Me Planety")
+  @Test(description = "Hurt Me Plently")
   public void checkResultsPage() {
-    GoogleCloudCalculatorPage expectedPage = new GoogleCloudPage(driver)
+    boolean expectedPage = new GoogleCloudPage(driver)
             .openPage()
             .searchForInput("Google Cloud Platform Pricing Calculator")
             .checkPageOpenedSuccess("Google Cloud Platform Pricing Calculator")
             .searchForResult()
-            .calculateTask();
-    Assert.assertTrue(expectedPage.equals(new Object()), "Website wasn't opened correctly!");
+            .calculateTask()
+            .checkEstimatedParameters();
+    Assert.assertTrue(expectedPage, "Website wasn't opened correctly!");
   }
 
 
   @AfterMethod(alwaysRun = true)
   public void browserQuit() {
-//    driver.quit();
-//    driver = null;
+    driver.quit();
+    driver = null;
   }
 
 }
