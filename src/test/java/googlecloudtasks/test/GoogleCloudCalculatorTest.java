@@ -1,6 +1,6 @@
 package googlecloudtasks.test;
 
-import googlecloudtasks.page.GoogleCloudCalculatorPage;
+import googlecloudtasks.page.GoogleCloudCalculatorEstimatedPage;
 import googlecloudtasks.page.GoogleCloudPage;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -16,18 +16,32 @@ public class GoogleCloudCalculatorTest {
   @BeforeMethod(alwaysRun = true)
   public void browserSetup() {
     driver = new ChromeDriver();
+    driver.manage().window().maximize();
   }
 
-  @Test(description = "Hurt Me Plently")
+  @Test(description = "Hurt Me Plenty")
   public void checkResultsPage() {
-    boolean expectedPage = new GoogleCloudPage(driver)
+    GoogleCloudCalculatorEstimatedPage calculatedPage = new GoogleCloudPage(driver)
+            .openPage()
+            .searchForInput("Google Cloud Platform Pricing Calculator")
+            .checkPageOpenedSuccess("Google Cloud Platform Pricing Calculator")
+            .searchForResult()
+            .calculateTask();
+    Assert.assertTrue(calculatedPage.checkEstimatedParameters(), "Wrong parameters!");
+    Assert.assertTrue(calculatedPage.checkEstimatedPrice("1,082.77"), "Estimated price is wrong!");
+  }
+
+  @Test(description = "Hardcore")
+  public void checkResultsPageWithEmail() {
+    boolean calculatedPage = new GoogleCloudPage(driver)
             .openPage()
             .searchForInput("Google Cloud Platform Pricing Calculator")
             .checkPageOpenedSuccess("Google Cloud Platform Pricing Calculator")
             .searchForResult()
             .calculateTask()
-            .checkEstimatedParameters();
-    Assert.assertTrue(expectedPage, "Website wasn't opened correctly!");
+            .sendEstimatedByEmail()
+            .checkForEmail("1,082.77");
+    Assert.assertTrue(calculatedPage, "Wrong estimated price in email!");
   }
 
 

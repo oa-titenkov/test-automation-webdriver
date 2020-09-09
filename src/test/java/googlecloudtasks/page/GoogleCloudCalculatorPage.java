@@ -13,7 +13,7 @@ public class GoogleCloudCalculatorPage extends AbstractPage {
     super(driver);
   }
 
-  @FindBy(xpath = "//div[@class='md-ripple-container']")
+  @FindBy(xpath = "//div[@class='tab-holder compute']")
   private WebElement computeEngineButton;
 
   @FindBy(xpath = "//input[@id='input_60']")
@@ -79,7 +79,7 @@ public class GoogleCloudCalculatorPage extends AbstractPage {
     driver.switchTo().frame(frame);
     driver.switchTo().frame("myFrame");
     wait.until(ExpectedConditions.visibilityOf(inputInstances));
-//    computeEngineButton.click();
+    computeEngineButton.click();
     inputInstances.sendKeys("4");
     operatingSystemSoftwareDropdown.click();
     wait.until(ExpectedConditions.visibilityOf(operatingSystemSoftwareOption));
