@@ -95,6 +95,9 @@ public class GoogleCloudCalculatorPage extends AbstractPage {
     numberOfGPUsDropdown.click();
     wait.until(ExpectedConditions.visibilityOf(numberOfGPUsOption));
     numberOfGPUsOption.click();
+    GPUTypeDropdown.click();
+    wait.until(ExpectedConditions.visibilityOf(GPUTypeOption));
+    GPUTypeOption.click();
     localSSDDropdown.click();
     wait.until(ExpectedConditions.visibilityOf(localSSDOption));
     localSSDOption.click();
