@@ -1,7 +1,9 @@
 package googlecloudtasks.test;
 
+import googlecloudtasks.model.ComputeEngine;
 import googlecloudtasks.page.GoogleCloudCalculatorEstimatedPage;
 import googlecloudtasks.page.GoogleCloudPage;
+import googlecloudtasks.service.ComputeEngineService;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -14,7 +16,7 @@ public class GoogleCloudCalculatorTest extends CommonConditions {
             .searchForInput("Google Cloud Platform Pricing Calculator")
             .checkPageOpenedSuccess("Google Cloud Platform Pricing Calculator")
             .searchForResult()
-            .calculateTask();
+            .calculateTask(new ComputeEngine());
     Assert.assertTrue(calculatedPage.checkEstimatedParameters(), "Wrong parameters!");
     Assert.assertTrue(calculatedPage.checkEstimatedPrice("1,082.77"), "Estimated price is wrong!");
   }
@@ -26,7 +28,7 @@ public class GoogleCloudCalculatorTest extends CommonConditions {
             .searchForInput("Google Cloud Platform Pricing Calculator")
             .checkPageOpenedSuccess("Google Cloud Platform Pricing Calculator")
             .searchForResult()
-            .calculateTask()
+            .calculateTask(new ComputeEngine())
             .sendEstimatedByEmail()
             .checkForEmail("1,082.77");
     Assert.assertTrue(calculatedPage, "Wrong estimated price in email!");

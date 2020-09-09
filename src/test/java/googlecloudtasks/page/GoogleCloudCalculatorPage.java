@@ -1,5 +1,7 @@
 package googlecloudtasks.page;
 
+import googlecloudtasks.model.ComputeEngine;
+import googlecloudtasks.service.ComputeEngineService;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -73,7 +75,7 @@ public class GoogleCloudCalculatorPage extends AbstractPage {
   @FindBy(xpath = "//button[@aria-label='Add to Estimate']")
   private WebElement addToEstimateButton;
 
-  public GoogleCloudCalculatorEstimatedPage calculateTask() {
+  public GoogleCloudCalculatorEstimatedPage calculateTask(ComputeEngine computeEngine) {
     WebDriverWait wait = new WebDriverWait(driver, 10);
     WebElement frame = driver.findElement(By.xpath("//iframe[contains(@name,'goog')]"));
     driver.switchTo().frame(frame);
@@ -82,6 +84,10 @@ public class GoogleCloudCalculatorPage extends AbstractPage {
     computeEngineButton.click();
     inputInstances.sendKeys("4");
     operatingSystemSoftwareDropdown.click();
+    driver.findElement
+            (By.xpath("//div[contains(text(),'" + computeEngine.getOperationSystemSoftware() +"')]/../.."))
+            .click();
+
     wait.until(ExpectedConditions.visibilityOf(operatingSystemSoftwareOption));
     operatingSystemSoftwareOption.click();
     machineClassDropdown.click();
