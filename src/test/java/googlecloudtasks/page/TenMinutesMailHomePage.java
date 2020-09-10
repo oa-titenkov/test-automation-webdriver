@@ -36,20 +36,20 @@ public class TenMinutesMailHomePage extends AbstractPage {
 
   public String copyEmailAdress() {
     ArrayList<String> tabs = new ArrayList<String>(driver.getWindowHandles());
-    WebDriverWait wait = new WebDriverWait(driver, 10);
+    WebDriverWait wait = new WebDriverWait(driver, WAIT_TIMEOUT);
     wait.until(ExpectedConditions.attributeContains(emailAddress, "value", "@"));
     String emailAddressText = emailAddress.getAttribute("value");
     driver.switchTo().window(tabs.get(0));
     return emailAddressText;
   }
 
-  public boolean checkForEmail(String price) {
+  public String checkForCorrectPriceInEmail() {
     ArrayList<String> tabs = new ArrayList<String>(driver.getWindowHandles());
     driver.switchTo().window(tabs.get(1));
     WebDriverWait wait = new WebDriverWait(driver, 30);
     wait.until(ExpectedConditions.textToBePresentInElement(inboxCounter, "1"));
     mailMessage.click();
-    return mailPrice.getText().split(" ")[1].equals(price);
+    return mailPrice.getText().split(" ")[1];
   }
 
 

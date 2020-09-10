@@ -1,5 +1,8 @@
 package googlecloudtasks.page;
 
+import googlecloudtasks.model.ComputeEngine;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -14,6 +17,8 @@ public class GoogleCloudCalculatorEstimatedPage extends AbstractPage {
     public GoogleCloudCalculatorEstimatedPage(WebDriver driver) {
         super(driver);
     }
+
+    private final Logger logger = LogManager.getRootLogger();
 
     @FindBy(xpath = "//md-card-content[@id='resultBlock']//div[@class='md-list-item-text ng-binding']")
     private List<WebElement> results;
@@ -38,15 +43,15 @@ public class GoogleCloudCalculatorEstimatedPage extends AbstractPage {
         else return results.get(5).getText().contains("1 Year");
     }
 
-    public boolean checkEstimatedPrice(String price) {
-        return estimatedCost.getText().contains(price);
+    public String checkEstimatedPrice() {
+        return estimatedCost.getText();
     }
 
 
     public TenMinutesMailHomePage sendEstimatedByEmail() {
         TenMinutesMailHomePage emailPage = new TenMinutesMailHomePage(driver);
         emailEstimateButton.click();
-        WebDriverWait wait = new WebDriverWait(driver, 10);
+        WebDriverWait wait = new WebDriverWait(driver, WAIT_TIMEOUT);
         wait.until(ExpectedConditions.visibilityOf(emailInput));
         String emailAddress = emailPage.openPage().copyEmailAdress();
         WebElement frame = driver.findElement(By.xpath("//iframe[contains(@name,'goog')]"));
@@ -55,6 +60,7 @@ public class GoogleCloudCalculatorEstimatedPage extends AbstractPage {
         wait.until(ExpectedConditions.visibilityOf(emailInput));
         emailInput.sendKeys(emailAddress);
         sendEmailButton.click();
+        logger.info("Sent price to mail: " + emailAddress);
         return emailPage;
     }
 

@@ -48,7 +48,7 @@ public class PastebinCreatePage extends AbstractPage {
     pasteExpirationContainer.click();
     Actions focusOnDropDown = new Actions(driver).moveToElement(pasteExpirationContainer);
     focusOnDropDown.sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ENTER).perform();
-    if(!paste.getSyntaxHighlighting().equals("")) {
+    if(paste.getSyntaxHighlighting() != null) {
       syntaxHighlightingContainer.click();
       syntaxHighlightingInput.sendKeys(paste.getSyntaxHighlighting());
       syntaxHighlightingInput.sendKeys(Keys.ENTER);

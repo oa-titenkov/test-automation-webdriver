@@ -4,22 +4,22 @@ import java.util.Objects;
 
 public class ComputeEngine {
 
-    private int numberOfInstances;
+    private String numberOfInstances;
     private String instancesReason;
     private String operationSystemSoftware;
     private String VMClass;
     private String instanceType;
-    private int GPUNumber;
+    private String GPUNumber;
     private String GPUType;
     private String LocalSSD;
     private String location;
     private String committedUsage;
 
-    public int getNumberOfInstances() {
+    public String getNumberOfInstances() {
         return numberOfInstances;
     }
 
-    public void setNumberOfInstances(int numberOfInstances) {
+    public void setNumberOfInstances(String numberOfInstances) {
         this.numberOfInstances = numberOfInstances;
     }
 
@@ -55,11 +55,11 @@ public class ComputeEngine {
         this.instanceType = instanceType;
     }
 
-    public int getGPUNumber() {
+    public String getGPUNumber() {
         return GPUNumber;
     }
 
-    public void setGPUNumber(int GPUNumber) {
+    public void setGPUNumber(String GPUNumber) {
         this.GPUNumber = GPUNumber;
     }
 

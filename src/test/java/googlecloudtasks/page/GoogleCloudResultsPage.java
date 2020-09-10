@@ -19,14 +19,8 @@ public class GoogleCloudResultsPage extends AbstractPage {
     return null;
   }
 
-  public GoogleCloudResultsPage checkPageOpenedSuccess(String text) {
-    WebDriverWait wait = new WebDriverWait(driver,10);
-    wait.until(ExpectedConditions.titleContains(text));
-    return this;
-  }
-
-  public GoogleCloudCalculatorPage searchForResult() {
-    WebDriverWait wait = new WebDriverWait(driver,10);
+  public GoogleCloudCalculatorPage openCalculator() {
+    WebDriverWait wait = new WebDriverWait(driver,WAIT_TIMEOUT);
     wait.until(ExpectedConditions.visibilityOf(resultsPage));
     resultsPage.click();
     return new GoogleCloudCalculatorPage(driver);

@@ -1,7 +1,8 @@
 package googlecloudtasks.page;
 
 import googlecloudtasks.model.ComputeEngine;
-import googlecloudtasks.service.ComputeEngineService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -9,11 +10,19 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+
 public class GoogleCloudCalculatorPage extends AbstractPage {
 
   public GoogleCloudCalculatorPage(WebDriver driver) {
     super(driver);
   }
+
+  private WebDriverWait wait = new WebDriverWait(driver, WAIT_TIMEOUT);
+  private final Logger logger = LogManager.getRootLogger();
+
+
+  @FindBy(xpath = "//iframe[contains(@name,'goog')]")
+  private WebElement mainFrame;
 
   @FindBy(xpath = "//div[@class='tab-holder compute']")
   private WebElement computeEngineButton;
@@ -21,23 +30,17 @@ public class GoogleCloudCalculatorPage extends AbstractPage {
   @FindBy(xpath = "//input[@id='input_60']")
   private WebElement inputInstances;
 
+  @FindBy(xpath = "//input[@id='input_61']")
+  private WebElement inputInstancesReason;
+
   @FindBy(id = "select_value_label_53")
   private WebElement operatingSystemSoftwareDropdown;
 
-  @FindBy(xpath = "//md-option[@value='free']")
-  private WebElement operatingSystemSoftwareOption;
-
   @FindBy(id = "select_value_label_54")
-  private WebElement machineClassDropdown;
-
-  @FindBy(id = "select_option_75")
-  private WebElement machineClassOption;
+  private WebElement VMClassDropdown;
 
   @FindBy(id = "select_86")
-  private WebElement instanceTypeDropdown;
-
-  @FindBy(id = "select_option_236")
-  private WebElement instanceTypeOption;
+  private WebElement machineTypeDropdown;
 
   @FindBy(xpath = "//md-checkbox[@ng-model='listingCtrl.computeServer.addGPUs']")
   private WebElement addGPUsCheckbox;
@@ -45,76 +48,61 @@ public class GoogleCloudCalculatorPage extends AbstractPage {
   @FindBy(id = "select_value_label_370")
   private WebElement numberOfGPUsDropdown;
 
-  @FindBy(id = "select_option_377")
-  private WebElement numberOfGPUsOption;
-
   @FindBy(id = "select_value_label_371")
   private WebElement GPUTypeDropdown;
-
-  @FindBy(id = "select_option_384")
-  private WebElement GPUTypeOption;
 
   @FindBy(id = "select_value_label_192")
   private WebElement localSSDDropdown;
 
-  @FindBy(id = "select_option_257")
-  private WebElement localSSDOption;
-
   @FindBy(id = "select_value_label_58")
   private WebElement datacenterLocationDropdown;
-
-  @FindBy(id = "select_option_204")
-  private WebElement datacenterLocationOption;
 
   @FindBy(id = "select_value_label_59")
   private WebElement committedUsageDropdown;
 
-  @FindBy(id = "select_option_93")
-  private WebElement committedUsageOption;
-
   @FindBy(xpath = "//button[@aria-label='Add to Estimate']")
   private WebElement addToEstimateButton;
 
-  public GoogleCloudCalculatorEstimatedPage calculateTask(ComputeEngine computeEngine) {
-    WebDriverWait wait = new WebDriverWait(driver, 10);
-    WebElement frame = driver.findElement(By.xpath("//iframe[contains(@name,'goog')]"));
-    driver.switchTo().frame(frame);
+  public GoogleCloudCalculatorEstimatedPage calculateComputeEnginePrice(ComputeEngine computeEngine) {
+    driver.switchTo().frame(mainFrame);
     driver.switchTo().frame("myFrame");
     wait.until(ExpectedConditions.visibilityOf(inputInstances));
     computeEngineButton.click();
-    inputInstances.sendKeys("4");
+    inputInstances.sendKeys(computeEngine.getNumberOfInstances());
+    inputInstancesReason.sendKeys(computeEngine.getInstancesReason());
     operatingSystemSoftwareDropdown.click();
-    driver.findElement
-            (By.xpath("//div[contains(text(),'" + computeEngine.getOperationSystemSoftware() +"')]/../.."))
-            .click();
-
-    wait.until(ExpectedConditions.visibilityOf(operatingSystemSoftwareOption));
-    operatingSystemSoftwareOption.click();
-    machineClassDropdown.click();
-    wait.until(ExpectedConditions.visibilityOf(machineClassOption));
-    machineClassOption.click();
-    instanceTypeDropdown.click();
-    wait.until(ExpectedConditions.visibilityOf(instanceTypeOption));
-    instanceTypeOption.click();
-    addGPUsCheckbox.click();
+    parseElement(computeEngine.getOperationSystemSoftware(),"").click();
+    VMClassDropdown.click();
+    parseElement(computeEngine.getVMClass(),"75").click();
+    machineTypeDropdown.click();
+    parseElement(computeEngine.getInstanceType(),"").click();
+    if(!computeEngine.getGPUNumber().equals("")) addGPUsCheckbox.click();
     wait.until(ExpectedConditions.visibilityOf(numberOfGPUsDropdown));
     numberOfGPUsDropdown.click();
-    wait.until(ExpectedConditions.visibilityOf(numberOfGPUsOption));
-    numberOfGPUsOption.click();
+    parseElement(computeEngine.getGPUNumber(),"377").click();
     GPUTypeDropdown.click();
-    wait.until(ExpectedConditions.visibilityOf(GPUTypeOption));
-    GPUTypeOption.click();
+    parseElement(computeEngine.getGPUType(),"").click();
     localSSDDropdown.click();
-    wait.until(ExpectedConditions.visibilityOf(localSSDOption));
-    localSSDOption.click();
+    parseElement(computeEngine.getLocalSSD(),"").click();
     datacenterLocationDropdown.click();
-    wait.until(ExpectedConditions.visibilityOf(datacenterLocationOption));
-    datacenterLocationOption.click();
+    parseElement(computeEngine.getLocation(),"204").click();
     committedUsageDropdown.click();
-    wait.until(ExpectedConditions.visibilityOf(committedUsageOption));
-    committedUsageOption.click();
+    parseElement(computeEngine.getCommittedUsage(),"93").click();
     addToEstimateButton.click();
+    logger.info("Price estimated");
     return new GoogleCloudCalculatorEstimatedPage(driver);
+  }
+
+  private WebElement parseElement(String input, String id) {
+    if(id.equals("")) {
+      return wait.until(ExpectedConditions.visibilityOf(driver.findElement
+              (By.xpath("//div[contains(text(),'" + input + "')]/ancestor::md-option"))));
+    }
+    else {
+      return wait.until(ExpectedConditions.visibilityOf(driver.findElement
+              (By.xpath("//div[contains(text(),'" + input + "')]/ancestor::md-option[@id='select_option_" +id+"']"))));
+    }
+
   }
 
   protected AbstractPage openPage() {
