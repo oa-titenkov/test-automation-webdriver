@@ -66,7 +66,7 @@ public class GoogleCloudCalculatorPage extends AbstractPage {
   public GoogleCloudCalculatorEstimatedPage calculateComputeEnginePrice(ComputeEngine computeEngine) {
     driver.switchTo().frame(mainFrame);
     driver.switchTo().frame("myFrame");
-    wait.until(ExpectedConditions.visibilityOf(inputInstances));
+    wait.until(ExpectedConditions.visibilityOf(computeEngineButton));
     computeEngineButton.click();
     inputInstances.sendKeys(computeEngine.getNumberOfInstances());
     inputInstancesReason.sendKeys(computeEngine.getInstancesReason());
