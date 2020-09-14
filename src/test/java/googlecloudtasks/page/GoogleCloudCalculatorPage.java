@@ -17,7 +17,7 @@ public class GoogleCloudCalculatorPage extends AbstractPage {
     super(driver);
   }
 
-  private WebDriverWait wait = new WebDriverWait(driver, WAIT_TIMEOUT);
+  private WebDriverWait wait = new WebDriverWait(driver, 25);
   private final Logger logger = LogManager.getRootLogger();
 
 
